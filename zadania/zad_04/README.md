@@ -8,10 +8,17 @@
 >		- za pośrednictwem volume
 > 4. Dodaj do serwisu nginx endpoint `/status`, który zwróci kod 200 oraz  utworzoną przez Ciebie informację, np “Status: OK”, zweryfikuj działanie.
 
-**Komendy**
+## Komendy
+**Budowanie obrazu**
 ```shell
 docker build -t zad:04 .
+```
+**Uruchamianie kontenera z wbudowanym `index.html`**
+```shell
 docker run --rm -p 80:80 zad:04
+```
+**Uruchamianie kontenera z podmontowanym volumenem**
+```shell
 docker volume create isa_zadanie_04
 sudo su - #< tu kopiujemy html do volumenu
 docker run --rm -p 80:80 -v isa_zadanie_04:/usr/share/nginx/html zad:04
