@@ -1,0 +1,5 @@
+FROM debian:stretch-slim
+
+VOLUME [ "/data" ]
+
+CMD ["su", "-c", "tail -F /data/data.log"]

@@ -1,0 +1,5 @@
+FROM debian:stretch-slim
+
+VOLUME [ "/data" ]
+
+CMD ["su", "-c", "while true; do echo `date` >> /data/data.log; sleep 5; done"]

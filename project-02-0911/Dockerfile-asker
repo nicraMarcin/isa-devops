@@ -1,0 +1,7 @@
+FROM debian:stretch-slim
+
+WORKDIR /app
+RUN apt update && apt install -y --no-install-recommends curl && rm -rf /var/cache/apt/* 
+COPY asker.sh /app/asker.sh
+
+CMD ["su", "-c", "/bin/bash /app/asker.sh"]
