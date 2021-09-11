@@ -1,0 +1,30 @@
+Vagrant.configure("2") do |config|
+    config.vm.box = "aspyatkin/ubuntu-18.04-server"
+    
+    config.vm.hostname = "ubuntu-test"
+    config.vm.network "private_network", type: "dhcp"
+    config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+  
+    config.vm.provision "file", source: "~/.gitconfig", destination: ".gitconfig"
+    config.vm.provision "file", source: "~/.ssh/config", destination: ".ssh/config"
+    # config.vm.provision "file", source: "~/.ssh/aws_codecommit_2021", destination: ".ssh/aws_codecommit_2021"
+  
+    config.vm.provider "virtualbox" do |v|
+      v.gui = false
+      v.name = "ubuntu-test"
+      v.linked_clone = true
+  
+      v.check_guest_additions = true
+      if Vagrant.has_plugin?("vagrant-vbguest") then
+        config.vbguest.auto_update = false
+      end
+  
+      v.memory = 2048
+      v.cpus = 1
+    end
+  
+    config.vm.provision "shell", inline: <<-SHELL
+      apt-get update
+      apt-get install -y vim git
+    SHELL
+  end

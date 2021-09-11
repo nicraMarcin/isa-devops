@@ -1,0 +1,45 @@
+Vagrant.configure("2") do |config|
+    config.vm.box = "aspyatkin/ubuntu-18.04-server"
+    
+    config.vm.network "private_network", ip: "172.28.128.22"
+
+    config.vm.provision "file", source: "./ssh/aws", destination: ".ssh/aws"
+
+    
+    config.vm.provider "virtualbox" do |v|
+      v.gui = false
+      v.linked_clone = true
+  
+      v.check_guest_additions = true
+      if Vagrant.has_plugin?("vagrant-vbguest") then
+        config.vbguest.auto_update = false
+      end
+  
+      v.memory = 4096
+      v.cpus = 4
+    end
+  
+    # config.vm.provision "shell", path: "./install_packages.sh"
+  
+    config.vm.define "db" do |host|
+      host.vm.hostname = "db"
+      host.vm.network "private_network", ip: "192.168.100.12"
+      host.vm.provision "shell", path: "./install_db.sh"
+    end 
+  
+
+    config.vm.define "frontend" do |host|
+      host.vm.hostname = "frontend"
+      host.vm.network "private_network", ip: "192.168.100.11"
+      host.vm.provision "file", source: "nginx/nginx.conf", destination: "nginx/nginx.conf"
+      host.vm.provision "shell", path: "./install_frontend.sh"
+    end 
+
+    config.vm.define "backend", primary: true do |host|
+      host.vm.hostname = "backend"
+      host.vm.network "private_network", ip: "192.168.100.10"
+      host.vm.provision "shell", path: "./install_backend.sh"
+
+      # host.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+    end
+  end
