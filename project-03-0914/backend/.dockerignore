@@ -1,0 +1,10 @@
+.dockerignore
+.gitignore
+Dockerfile*
+venv
+config.sh
+data.sql
+README.md
+task.sql
+.env*
+scripts
